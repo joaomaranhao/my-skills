@@ -18,13 +18,12 @@ Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
 ## Independência do revisor
 
-Mesmo modelo + mesmo histórico = viés de passar o próprio diff. Trate isso como regra, não como dica. A skill **não** fixa vendor nem slug.
+Mesmo histórico/conversa = viés de passar o próprio diff. Trate isso como regra, não como dica. A skill **não** fixa modelo nem vendor: **você escolhe** o modelo do revisor.
 
-1. **Cursor Agent:** lance um **subagente novo** (`Task`, `subagent_type: generalPurpose`, `run_in_background: false`) para a auditoria.
-   - `model`: **não** use `inherit`. Escolha um slug **da lista permitida do `Task`** distinto do modelo que implementou. Se nenhum slug adequado existir ou o spawn falhar, pare e peça um **chat novo** só com `verify` (modelo ≠ implementador). Não caia em `inherit` nem no mesmo modelo/histórico da implementação.
-   - O subagente **não** recebe o histórico da implementação. Não cole “o código está certo” nem o veredito desejado.
+1. Rode a auditoria em **contexto isolado**: um **subagente novo** ou uma **conversa nova** que **não** recebe o histórico da implementação.
+   - Se usar subagente, ele **não** recebe o histórico. Não cole “o código está certo” nem o veredito desejado.
    - No `prompt`, passe só fatos: branch atual, base (`main` ou a que o usuário disser), caminho do PBI ativo, caminhos `.spec/` a ler, e o bloco **Mandato do revisor** abaixo, verbatim.
-2. **Sem spawn (outro harness, Task indisponível):** pare. Peça conversa nova só com `verify`, em modelo distinto do que implementou. Não faça a auditoria nesta conversa se ela implementou o PBI.
+2. **Sem contexto isolado disponível:** pare. Peça conversa nova só com `verify`. Não faça a auditoria nesta conversa se ela implementou o PBI.
 3. **Você (orquestrador):** pré-condições (`qa` / e2e), disparo do revisor, gravação do relatório dele no PBI, rascunho de PR se o revisor autorizar. **Não** re-audite o diff para “corrigir” o revisor. Discordância só se o relatório for factualmente impossível (citou arquivo que não existe) — registre isso, não inverta o veredito.
 
 ## Mandato do revisor
@@ -51,7 +50,7 @@ Copie para o subagente (ou para a conversa nova):
 
 ## Depois que o revisor voltar
 
-- Grave `## Review` no PBI com o veredito, a tabela e os bloqueios (crie ou substitua). Atribua: modelo do revisor (slug), não “self-review”.
+- Grave `## Review` no PBI com o veredito, a tabela e os bloqueios (crie ou substitua). Atribua: revisor **isolado** (não “self-review”).
 - Se o revisor apontar CA atendido ainda `- [ ]` (ou o contrário), **corrija só os checkboxes de CA** no PBI para bater com o relatório — não mexa em código.
 - **Não atende** ou ressalva que **bloqueia merge:** resumo no chat do que corrigir; não escreva texto de PR como se estivesse pronto; não implemente a correção aqui (volta `exec-step` / `qa` conforme o caso).
 - **Atende**, ou **Atende com ressalvas** só de follow-up: ao final do PBI, **Título** e **Descrição** de PR, **sempre em português** (resumo, motivação, comandos testados), alinhados ao relatório — sem contradizê-lo. Não coloque id/nome de PBI do `.spec/` no título (são locais). Identificação original de tracker só se o PBI já a registrar e o time rastrear a PR por ela.

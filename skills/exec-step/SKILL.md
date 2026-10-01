@@ -14,9 +14,9 @@ Executa estritamente um Step específico do plano aprovado na seção `## Plano 
 
 Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
-## Modelo (sessão — manual)
+## Sessão (o modelo é escolha sua)
 
-Recomendado: **Grok** (ex.: 4.6). A skill não troca o picker: chat novo, escolha Grok, invoque `exec-step`. Não implemente no mesmo chat em que rodou `plan-task` em Sonnet.
+Esta skill **não troca** o modelo do chat. Não implemente no mesmo chat em que rodou `plan-task`/`replan`: abra um **chat novo**, escolha o modelo que quiser e invoque `exec-step`.
 
 1. **Foco e Escopo Fechado:**
    - Execute **APENAS** o Step indicado pelo usuário.

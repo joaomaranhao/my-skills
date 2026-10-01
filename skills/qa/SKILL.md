@@ -17,13 +17,13 @@ Atua como um QA Engineer: valida resiliência e cobertura de borda no **PBI como
 
 Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
-## Modelo
+## Independência do revisor
 
-Não auditar no **mesmo** modelo **nem** no mesmo histórico que implementou (`exec-step`).
+Não auditar no **mesmo** histórico/conversa que implementou (`exec-step`). Rode `qa` em **contexto isolado** — conversa nova ou subagente que **não** recebe o histórico da implementação. **Você escolhe o modelo** do revisor; a skill não fixa modelo nem vendor.
 
-- **Cursor Agent + Task:** lance um subagente (`generalPurpose`, `run_in_background: false`) com um `model` da lista permitida do `Task` que seja **diferente** do implementador. **Não** use `inherit`. Se o spawn falhar ou não houver slug adequado, pare e peça um **chat novo** só com `qa` (qualquer modelo ≠ o da implementação).
-- O subagente lê e cumpre **esta** skill (análise, suíte, anexar Steps, QA Report). Você (sessão que implementou) não escreve o relatório no lugar dele.
-- Se o usuário já abriu um **chat novo** (outro modelo/histórico) e invocou `qa`, cumpra a skill nesta sessão.
+- Se usar subagente, ele lê e cumpre **esta** skill (análise, suíte, anexar Steps, QA Report). Você (sessão que implementou) não escreve o relatório no lugar dele.
+- Se o harness não permitir contexto isolado, pare e peça um **chat novo** só com `qa`.
+- Se o usuário já abriu um **chat novo** e invocou `qa`, cumpra a skill nesta sessão.
 
 ## Proibido nesta skill
 
@@ -36,6 +36,7 @@ Não auditar no **mesmo** modelo **nem** no mesmo histórico que implementou (`e
 
 1. **Análise de vulnerabilidades e edge cases:**
    - Código do PBI atual (`.spec/features/<PBI-id>.md`) vs `.spec/` (`1-overview.md`, `2-architecture.md`, `.spec/docs/` citados, ADRs, CAs).
+   - **Consolidado cross-PBI** (invocada pelo `feature-orchestrator` sobre o código já merged): valide também a **integração entre PBIs** — contratos, módulos compartilhados, ordem de deploy/config e regressões que só aparecem com os recortes juntos. Um gap que atravessa PBIs vai como Step no PBI pertinente.
    - Mapeie falhas: payload inválido/nulo/tipo errado; limites (string longa, inteiro negativo, array vazio); timeout; store indisponível; concorrência / corrida se a stack tiver.
 
 2. **Execução da suíte que já existe:**

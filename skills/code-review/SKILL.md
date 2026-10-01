@@ -14,9 +14,9 @@ disable-model-invocation: true
 
 Ajuda **você** a revisar o código de outra pessoa. Não implementa, não aprova merge sozinho, não substitui `verify`.
 
-## Modelo (sessão — manual)
+## Sessão (o modelo é escolha sua)
 
-Recomendado: chat novo em modelo **diferente** do que costuma implementar. A skill não troca o picker e **não** fixa vendor.
+Recomendado: chat novo, **separado** de quem implementou. A skill não troca o picker; **você escolhe o modelo** e não fixa vendor.
 
 ## Alvo
 

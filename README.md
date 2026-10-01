@@ -17,11 +17,14 @@ skills/
 ├── qa/               # Analisa suíte; gaps viram Steps (sem código)
 ├── e2e-evidence/     # Ambiente vivo → pacote de evidências
 ├── verify/           # Revisor isolado vs .spec + texto do PR
-├── loop-engineering/ # Orquestra plan-task→verify + commits; sem PR
+├── pbi-loop/         # Orquestra 1 PBI (plan-task→verify), human-in-the-loop
+├── feature-orchestrator/ # Feature inteira autônoma; paraleliza PBIs no Herdr; compõe pbi-loop
 ├── archive-pbi/      # Depois do merge: features/ → archive/
 └── code-review/      # Review de PR de pares (fora do pipeline)
 scripts/
-└── link-to-project.sh
+├── link-to-project.sh
+├── validate-skills.sh      # checa frontmatter, name↔pasta e links relativos
+└── worktree-spec-sync.sh   # reconcilia .spec/ principal ↔ worktree (feature-orchestrator)
 ```
 
 ## Pipeline
@@ -34,26 +37,31 @@ replan           spec drift: PBI/arquitetura/ADR + Steps; sem código
 qa               analisa o PBI; suíte atual; gaps → Steps novos
 e2e-evidence     ambiente vivo: suíte e2e + transcrição + dump do store → .spec/e2e/evidence/<PBI-id>/
 verify           revisor isolado vs .spec + texto do PR
-loop-engineering orquestra plan-task→verify com commit por Step; sem PR
+pbi-loop         orquestra 1 PBI (plan-task→verify) com commit por Step; human-in-the-loop
+feature-orchestrator feature inteira autônoma: paraleliza PBIs no Herdr (worktree por PBI) e compõe pbi-loop
 archive-pbi      depois do merge: PBI → archive/
 ```
 
-Fora do pipeline: `code-review` — PR de **pares** (não é o `verify` do que você implementou). Chat novo, modelo distinto do que costuma implementar; skill `code-review`.
+Fora do pipeline: `code-review` — PR de **pares** (não é o `verify` do que você implementou). Chat novo, **separado** de quem implementou; skill `code-review`.
 
 Perdido na fase SDD? skill `sdd`.
 
+**Quando NÃO usar SDD:** tarefa pequena e óbvia (um arquivo, sem CA/contrato novo, sem rastreabilidade pedida) faz direto. Os portões têm custo; não crie `.spec/` só para “seguir o método”.
+
 ## Fluxo típico (Cursor)
 
-As skills **não trocam** o modelo do chat. Você abre a sessão no picker e invoca a skill.
+As skills **não trocam** o modelo do chat. Você abre a sessão no picker, **escolhe o modelo** e invoca a skill.
 
-1. **Chat novo → Claude Sonnet** → `plan-task` (ou `replan` se for drift de spec). Aprove o plano. Não implemente neste chat.
-2. **Chat novo → Grok** (ex.: 4.6) → `exec-step` um a um, ou `loop-engineering` se o plano já estiver no PBI e você pediu o loop (commit por Step; sem PR).
-3. **`qa` e `verify`** → revisor **isolado**: subagente com modelo **diferente** do implementador (sem `inherit`), ou chat novo só com `qa`/`verify`. A skill não fixa vendor.
+1. **Chat novo** → `plan-task` (ou `replan` se for drift de spec). Aprove o plano. Não implemente neste chat.
+2. **Chat novo** → `exec-step` um a um, ou `pbi-loop` se o plano já estiver no PBI e você pediu o loop de **um** PBI (commit por Step; human-in-the-loop).
+3. **`qa` e `verify`** → revisor **isolado**: conversa/subagente novo, sem o histórico da implementação. O modelo é sua escolha; a skill não fixa vendor.
 4. Depois do merge da PR (você abre a PR): chat qualquer → `archive-pbi`.
 
-Review de colega: **chat novo** (modelo ≠ implementador habitual) → `code-review` (não misture com `verify`).
+Review de colega: **chat novo**, separado do implementador habitual → `code-review` (não misture com `verify`).
 
-Não rode `verify`/`qa` com `inherit` nem no mesmo histórico/modelo que implementou. `loop-engineering` sem plano e fora do Sonnet **para** e pede o chat de `plan-task`.
+Não rode `verify`/`qa` no mesmo histórico/conversa que implementou. `pbi-loop` sem plano **para** e pede o chat de `plan-task`.
+
+**Feature inteira (N PBIs, front + back):** chat novo → `feature-orchestrator` (autônomo; aprova só o plano da feature). Ele compõe o `pbi-loop` por PBI e paraleliza no Herdr quando disponível. Sem Herdr, cai no caminho sequencial.
 
 ## Consumo no projeto
 
@@ -83,7 +91,7 @@ Antigravity e Codex compartilham `.agents/skills/`; o script linka uma vez. `AGE
 
 Novo harness: uma linha em `scripts/harnesses.conf` (`id`, pasta de skills, tipo de hook).
 
-Rode o script de novo quando o catálogo ganhar skill ou o texto da âncora mudar.
+Rode o script de novo quando o catálogo ganhar skill ou o texto da âncora mudar. Valide o catálogo antes de linkar: `./scripts/validate-skills.sh` (frontmatter, `name` ↔ pasta, links relativos).
 
 Não commite os destinos se o SDD for só seu. No consumidor:
 

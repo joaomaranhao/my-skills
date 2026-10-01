@@ -15,9 +15,9 @@ Planeja a execução de um PBI em `.spec/features/` em passos (Steps) pequenos, 
 
 Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
-## Modelo (sessão — manual)
+## Sessão (o modelo é escolha sua)
 
-Esta skill **não troca** o modelo do chat. Recomendado: **Claude Sonnet**. Abra um **chat novo**, escolha Sonnet no picker, invoque `plan-task`. Se já estiver em outro modelo e o usuário mandou planejar mesmo assim, planeje; avise uma vez que o plano fica melhor em Sonnet.
+Esta skill **não troca** o modelo do chat. Abra um **chat novo**, escolha o modelo que quiser e invoque `plan-task`. Não implemente no mesmo chat em que planejou.
 
 ## Plano já existente (refinar)
 

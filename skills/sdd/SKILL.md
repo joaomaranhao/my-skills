@@ -21,8 +21,13 @@ Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md) (pipeline e tabe
    - Todos `[x]` e sem `QA Report` Limpo (ausente, Steps anexados, Falhas, ou `Obsoleto`) → `qa`.
    - `QA Report` com Steps anexados → `exec-step` (não `e2e-evidence`).
    - `qa` Limpo e evidência ausente/`Obsoleto` (sem skip válido) → `e2e-evidence` (skip justificado **conclui** o portão).
-   - `qa` Limpo + evidência válida ou skip justificado/planejado, ainda sem PR → `verify` (ou `loop-engineering` se o usuário quiser o restante com commits). `Obsoleto` ≠ evidência válida.
-   - Usuário pediu fechar o PBI no automático, sem PR → `loop-engineering` (não pular aprovação do plano nem o `verify` isolado).
+   - `qa` Limpo + evidência válida ou skip justificado/planejado, ainda sem PR → `verify` (ou `pbi-loop` se o usuário quiser o restante de um PBI com commits). `Obsoleto` ≠ evidência válida.
+   - Usuário pediu fechar o PBI no automático, sem PR → `pbi-loop` (não pular aprovação do plano nem o `verify` isolado).
+   - Usuário quer levar uma **feature inteira** (N PBIs, ex.: front + back) de ponta a ponta, ou paralelizar PBIs → `feature-orchestrator` (compõe o `pbi-loop`; aprovação só do plano da feature).
    - PR mergeada e o PBI ainda em `features/` → `archive-pbi`.
    - `features/` vazio → item no backlog + `plan-task`.
 3. Se o usuário já nomeou a fase, só confirme ou corrija (ex.: pediu `verify` sem `qa` Limpo; pediu `archive-pbi` antes do merge).
+
+## Quando NÃO usar
+
+Tarefa pequena e óbvia (um arquivo, sem CA/contrato novo, sem rastreabilidade pedida): **faça direto**. Os portões (plano, QA, evidência, review) têm custo e não compensam num recorte trivial. Sem PBI/CA real, não crie `.spec/` só para "seguir o método".
