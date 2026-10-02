@@ -27,13 +27,13 @@ Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 - **Exclusivo desta skill:** manifesto da feature, grafo de dependências, isolamento por worktree, disparo/monitoramento dos painéis Herdr, reconciliação de `.spec/`, merge/rebase, QA de integração cross-PBI e encerramento.
 - **Unidade paralela = PBI.** Steps dentro de um PBI seguem a ordem sequencial do `pbi-loop` (por design). Esta skill não fatia Steps.
 
-## Sessões e revisor (o modelo é escolha sua)
+## Sessões e revisor
 
-Esta skill **não troca** o modelo do chat. **Você escolhe** o modelo ao abrir cada chat.
+Regras-base em [../sdd-context/SKILL.md](../sdd-context/SKILL.md), **Sessões, janelas e isolamento**. Específico desta skill:
 
-- `plan-task` / `replan`: **chat novo**, separado de quem vai implementar.
-- Workers/painéis: **chat novo** por PBI.
-- `qa` / `verify`: **contexto isolado** (conversa/subagente novo, sem o histórico da implementação). Nunca no mesmo histórico/modelo que implementou. Sem contexto isolado, pare e peça um chat novo para o portão.
+- `plan-task` / `replan`: chat novo, separado de quem vai implementar.
+- Workers/painéis: **um por PBI**. O isolamento é **por PBI**, não por Step (o painel é um processo e não abre janela por unidade); a janela por Step do `pbi-loop` vale só no modo Interativo.
+- `qa` / `verify`: revisor isolado (conversa/subagente novo, sem o histórico da implementação). Sem contexto isolado, pare e peça chat novo para o portão. A sequência de sessões é do `pbi-loop` — não a repita aqui.
 
 ## Definição de “feature”
 
@@ -85,7 +85,7 @@ O `sdd-context` exige **um** `PBI-*.md` em `.spec/features/` por árvore. Como `
 2. Para cada PBI, prepare a isolação de contexto (crie na Fase 1 se for planejar ali; reutilize na Fase 2):
    - `git worktree add .worktrees/pbi-<ID>` com branch dedicada a partir da base acordada; garanta `.worktrees/` no `.gitignore`.
    - Copie o recorte de `.spec/` e o `PBI-*.md` (do `backlog/`) para a worktree, com **um** PBI ativo.
-3. **Com Herdr:** dispare a API/CLI para instanciar **um painel de fundo por PBI**, cada um rodando `pbi-loop` no **modo Implementação** (passos 1–3) na sua worktree. No prompt, passe só fatos: worktree/branch, id do PBI, caminhos `.spec/` que pode ler e a base. Não cole veredito nem histórico de outra unidade, nem o resultado esperado.
+3. **Com Herdr:** dispare a API/CLI para instanciar **um painel de fundo por PBI**, cada um rodando `pbi-loop` no **modo Implementação** (passos 1–3) na sua worktree. No prompt, passe só fatos: worktree/branch, id do PBI, caminhos `.spec/` que pode ler e a base. Não cole veredito nem histórico de outra unidade, nem o resultado esperado. O painel roda os passos no próprio processo — **não** exija uma janela nova por Step (o isolamento é por PBI).
 4. Monitore o ciclo de vida (com Herdr) até que **todos** os painéis entrem em `idle`/concluído; não considere concluído por timeout silencioso. Painel com falha → não faz merge; leia o relatório e decida (`replan`/`pbi-loop` corretivo).
 5. Consolide na ordem do grafo: faça `merge`/`rebase` de cada branch na principal, um por vez, resolvendo conflitos pela ordem de dependência. Após cada merge: **reconcilie o `.spec/`** (seção acima), rode a suíte que o **repo documenta** e remova a worktree só após o merge confirmado.
 

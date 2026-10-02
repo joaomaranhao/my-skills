@@ -14,9 +14,9 @@ disable-model-invocation: true
 
 Ajuda **você** a revisar o código de outra pessoa. Não implementa, não aprova merge sozinho, não substitui `verify`.
 
-## Sessão (o modelo é escolha sua)
+## Sessão
 
-Recomendado: chat novo, **separado** de quem implementou. A skill não troca o picker; **você escolhe o modelo** e não fixa vendor.
+Chat novo, **separado** de quem implementou. Regras-base em [../sdd-context/SKILL.md](../sdd-context/SKILL.md), **Sessões, janelas e isolamento** (fora do pipeline).
 
 ## Alvo
 

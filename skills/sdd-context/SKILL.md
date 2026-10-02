@@ -43,6 +43,19 @@ Cada fase é uma skill. Não misture portões.
 
 Perdido na fase? skill `sdd`.
 
+## Sessões, janelas e isolamento
+
+Regra única do pipeline. As demais skills **citam** esta seção — não a repetem.
+
+**Por quê:** cada unidade em janela nova mantém o contexto pequeno e focado. Janela grande faz o agente se perder (instrução antiga, código já descartado, veredito que enviesa). Trocar de janela **zera** isso; o estado sobrevive no `PBI-*.md`, não no histórico.
+
+- **O modelo é escolha sua.** Nenhuma skill troca o picker/modelo do chat; você escolhe o modelo ao abrir a sessão. As skills não fixam vendor.
+- **Plano ≠ código.** `plan-task`/`replan` em sessão separada de `exec-step`.
+- **Uma janela por unidade (modo Interativo do `pbi-loop`).** Cada `exec-step` em janela de contexto nova (um Step por janela) e cada portão (`qa`, `e2e-evidence`, `verify`) em janela nova, do zero. O estado mora no `PBI-*.md`; o `pbi-loop` coordena e emite o handoff.
+- **Revisor isolado.** `qa` e `verify` **nunca** no contexto/histórico que implementou — conversa nova ou subagente que **não** recebe o histórico. Sem contexto isolado, pare e peça sessão nova só com o portão.
+- **Autônomo é por PBI, não por Step.** Nos painéis Herdr do `feature-orchestrator` o isolamento é por PBI (um processo por PBI); a janela por Step vale só no modo Interativo.
+- **Review de pares.** `code-review` em sessão separada de quem implementou (fora deste pipeline).
+
 ## Foco (Steps)
 
 - Trabalhe sempre na menor unidade possível (um **Step** do plano de execução por vez).
@@ -64,7 +77,7 @@ Perdido na fase? skill `sdd`.
 - Spec drift no `exec-step` → parar e `replan` (sem código).
 - **Invalidação:** se código ou plano mudar depois de `qa` Limpo / evidência / Review pré-PR, marque essas seções como **Obsoleto** (não apague o histórico). Próximo portão: `qa` de novo (e e2e/`verify` conforme o caso).
 - `e2e-evidence`: skip justificado **conclui** o portão; não inventa runner.
-- `verify` / `qa` após implementação: revisor **isolado** (conversa/subagente novo, sem o histórico da implementação). **Você escolhe o modelo**; a skill não fixa modelo nem vendor.
+- `verify` / `qa` após implementação: **revisor isolado** (ver **Sessões, janelas e isolamento**).
 - Depois do merge: `archive-pbi` (senão o próximo `plan-task` viola “um PBI em `features/`”).
 - Commit: `exec-step` sozinho só sugere a mensagem; `pbi-loop` (e `feature-orchestrator`, que o compõe) **executa** o commit do Step. `git commit` avulso continua do usuário. Não commite `.spec/`.
 - Memory bank `.spec/` é **local e pessoal**. Coloque `.spec/` no `.gitignore` do repo se ainda não estiver. Catálogo e2e versionado: o que o runner do repo já usa (ex.: `testdata/e2e/`, `e2e/`) — isso sim é do time.

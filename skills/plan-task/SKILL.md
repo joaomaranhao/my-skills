@@ -15,9 +15,9 @@ Planeja a execução de um PBI em `.spec/features/` em passos (Steps) pequenos, 
 
 Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
-## Sessão (o modelo é escolha sua)
+## Sessão
 
-Esta skill **não troca** o modelo do chat. Abra um **chat novo**, escolha o modelo que quiser e invoque `plan-task`. Não implemente no mesmo chat em que planejou.
+Sessão separada de quem vai implementar. Regras-base em [../sdd-context/SKILL.md](../sdd-context/SKILL.md), **Sessões, janelas e isolamento**.
 
 ## Plano já existente (refinar)
 

@@ -19,7 +19,7 @@ Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
 ## Independência do revisor
 
-Não auditar no **mesmo** histórico/conversa que implementou (`exec-step`). Rode `qa` em **contexto isolado** — conversa nova ou subagente que **não** recebe o histórico da implementação. **Você escolhe o modelo** do revisor; a skill não fixa modelo nem vendor.
+`qa` roda em **contexto isolado** — nunca no histórico que implementou (`exec-step`). Regras-base em [../sdd-context/SKILL.md](../sdd-context/SKILL.md), **Sessões, janelas e isolamento**.
 
 - Se usar subagente, ele lê e cumpre **esta** skill (análise, suíte, anexar Steps, QA Report). Você (sessão que implementou) não escreve o relatório no lugar dele.
 - Se o harness não permitir contexto isolado, pare e peça um **chat novo** só com `qa`.

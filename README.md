@@ -50,7 +50,7 @@ Perdido na fase SDD? skill `sdd`.
 
 ## Fluxo típico (Cursor)
 
-As skills **não trocam** o modelo do chat. Você abre a sessão no picker, **escolhe o modelo** e invoca a skill.
+As skills **não trocam** o modelo do chat. Você abre a sessão no picker, **escolhe o modelo** e invoca a skill. Regra canônica de sessões/janelas/isolamento: `sdd-context`, seção **Sessões, janelas e isolamento**.
 
 1. **Chat novo** → `plan-task` (ou `replan` se for drift de spec). Aprove o plano. Não implemente neste chat.
 2. **Chat novo** → `exec-step` um a um, ou `pbi-loop` se o plano já estiver no PBI e você pediu o loop de **um** PBI (commit por Step; human-in-the-loop).

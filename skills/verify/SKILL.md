@@ -18,7 +18,7 @@ Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
 ## Independência do revisor
 
-Mesmo histórico/conversa = viés de passar o próprio diff. Trate isso como regra, não como dica. A skill **não** fixa modelo nem vendor: **você escolhe** o modelo do revisor.
+Mesmo histórico/conversa = viés de passar o próprio diff. Trate isso como regra, não como dica (ver [../sdd-context/SKILL.md](../sdd-context/SKILL.md), **Sessões, janelas e isolamento**).
 
 1. Rode a auditoria em **contexto isolado**: um **subagente novo** ou uma **conversa nova** que **não** recebe o histórico da implementação.
    - Se usar subagente, ele **não** recebe o histórico. Não cole “o código está certo” nem o veredito desejado.

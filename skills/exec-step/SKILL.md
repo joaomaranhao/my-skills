@@ -14,9 +14,9 @@ Executa estritamente um Step específico do plano aprovado na seção `## Plano 
 
 Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
-## Sessão (o modelo é escolha sua)
+## Sessão
 
-Esta skill **não troca** o modelo do chat. Não implemente no mesmo chat em que rodou `plan-task`/`replan`: abra um **chat novo**, escolha o modelo que quiser e invoque `exec-step`.
+Uma janela por Step, separada de quem planejou. Regras-base em [../sdd-context/SKILL.md](../sdd-context/SKILL.md), **Sessões, janelas e isolamento**.
 
 1. **Foco e Escopo Fechado:**
    - Execute **APENAS** o Step indicado pelo usuário.

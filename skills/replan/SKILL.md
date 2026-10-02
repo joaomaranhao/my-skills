@@ -14,9 +14,9 @@ Emergência de spec no meio do PBI. **Não** escreva código de produção nem t
 
 Leia também [../sdd-context/SKILL.md](../sdd-context/SKILL.md).
 
-## Sessão (o modelo é escolha sua)
+## Sessão
 
-Esta skill **não troca** o modelo do chat: abra um **chat novo**, escolha o modelo que quiser e invoque `replan`. Mesma regra do `plan-task`.
+Chat novo, mesma regra do `plan-task`. Base em [../sdd-context/SKILL.md](../sdd-context/SKILL.md), **Sessões, janelas e isolamento**.
 
 ## Quando
 
